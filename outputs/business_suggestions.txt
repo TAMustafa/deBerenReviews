@@ -1,0 +1,7 @@
+Key improvement suggestions (data-driven):
+- Reduce wait times and improve service flow: adjust peak staffing and set service time KPIs.
+- Food quality control: enforce pass checks to avoid cold/forgotten dishes and standardize recipes.
+- Pricing perception: introduce value bundles and clarify pricing on menus.
+- Ambience: adjust music volume policy and review climate control standards.
+- Cleanliness: increase FOH/BOH cleaning cadence and visible hygiene checks.
+- Order accuracy: implement order confirmation steps and expo verification.
