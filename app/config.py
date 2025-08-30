@@ -14,4 +14,3 @@ USE_LLM_SUGGESTIONS: bool = os.getenv("USE_LLM_SUGGESTIONS", "true").lower() in 
 OLLAMA_BASE_URL: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 OLLAMA_MODEL: str = os.getenv("OLLAMA_MODEL", "gemma3:latest")
 LLM_MAX_NEG_REVIEW_SAMPLES: int = int(os.getenv("LLM_MAX_NEG_REVIEW_SAMPLES", "100"))
-USE_LLM_TOP_TERMS_REFINEMENT: bool = os.getenv("USE_LLM_TOP_TERMS_REFINEMENT", "true").lower() in {"1", "true", "yes"}
