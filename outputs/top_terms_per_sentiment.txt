@@ -1,9 +1,0 @@
-Class: negative
-stond, zit, koud, jammer, hel, echt, lang, zak, uur, bijna, blijkbar, kreg, gevraagd, moet, gan
-
-Class: neutral
-wel, bedien vriendelijk, trag, deal, bedien, toetj, vind, reken, gewon, hamburger, social, social deal, gang, wij, lang wacht
-
-Class: positive
-lekker, goed, erg, smaakt, mooi, vriendelijk, gang menu, saus, bedankt, zer, geget, sparerib, dag, person, menu
-

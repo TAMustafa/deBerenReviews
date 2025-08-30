@@ -1,29 +1,15 @@
 import os
-import numpy as np
+from datetime import datetime, UTC
 import pandas as pd
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-# Support both "python -m app.main" (package) and direct script execution
-try:
-    from .config import DATA_PATH, OUTPUT_DIR
-    from .io_utils import load_data, ensure_output_dir
-    from .preprocess import CleanConfig, basic_clean, preprocess_texts
-    from .eda import run_eda
-    from .features import vectorize_text
-    from .modeling import train_sentiment_model
-    from .complaints import tag_complaints
-    from .export import export_enriched_csv
-except ImportError:  # running as a script without package context
-    import sys
-    sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-    from app.config import DATA_PATH, OUTPUT_DIR
-    from app.io_utils import load_data, ensure_output_dir
-    from app.preprocess import CleanConfig, basic_clean, preprocess_texts
-    from app.eda import run_eda
-    from app.features import vectorize_text
-    from app.modeling import train_sentiment_model
-    from app.complaints import tag_complaints
-    from app.export import export_enriched_csv
+# Main entrypoint: import directly from the app package
+from app.config import DATA_PATH, OUTPUT_DIR, USE_LLM_SUGGESTIONS, LLM_MAX_NEG_REVIEW_SAMPLES
+from app.io_utils import load_data, ensure_output_dir
+from app.preprocess import CleanConfig, basic_clean, preprocess_texts
+from app.eda import run_eda
+from app.complaints import tag_complaints
+from app.export import export_enriched_csv
+from app.llm_suggestions import generate_suggestions_llm
 
 
 def main():
@@ -39,39 +25,9 @@ def main():
     # NLP preprocessing
     cleaned_texts, sample_tokens = preprocess_texts(df["review"])
 
-    # Supervised sentiment from ratings (3 classes)
-    y = df["sentiment"].values
-    from sklearn.model_selection import train_test_split
-    X_train_texts, X_test_texts, y_train, y_test = train_test_split(
-        cleaned_texts, y, test_size=0.2, random_state=42, stratify=y
-    )
-    vec, X_train, X_test = vectorize_text(X_train_texts, X_test_texts)
-
-    model, model_name = train_sentiment_model(X_train, y_train)
-    print(f"Chosen model: {model_name}")
-    y_pred = model.predict(X_test)
-    acc = accuracy_score(y_test, y_pred)
-    print(f"Sentiment model accuracy: {acc:.3f}")
-
-    # Identify top indicative terms per class for insights
-    if hasattr(model, "coef_"):
-        feature_names = np.array(vec.get_feature_names_out())
-        classes = model.classes_
-        top_k = 15
-        insights = []
-        for idx, cls in enumerate(classes):
-            coefs = model.coef_[idx]
-            top_idx = np.argsort(coefs)[-top_k:][::-1]
-            terms = feature_names[top_idx]
-            insights.append((cls, terms.tolist()))
-        ensure_output_dir()
-        with open(os.path.join(OUTPUT_DIR, "top_terms_per_sentiment.txt"), "w", encoding="utf-8") as f:
-            for cls, terms in insights:
-                f.write(f"Class: {cls}\n")
-                f.write(", ".join(terms) + "\n\n")
-
     # Complaint tagging (all reviews + negative-only summary)
-    neg_mask = df["sentiment"] == "negative"
+    # Use rating as a proxy for negatives (<= 2 stars)
+    neg_mask = df["rating"].astype(float) <= 2
     per_text_complaints, complaint_counts = tag_complaints(cleaned_texts)
 
     # Save negative-only complaint summary (counts used for suggestions)
@@ -84,34 +40,60 @@ def main():
     # Export enriched CSVs and aggregations for BI tools (slim schema)
     export_enriched_csv(df, cleaned_texts, per_text_complaints)
 
-    # Lightweight improvement suggestions (based on negative complaint categories)
-    suggestions = []
+    # Rule-based baseline suggestions (kept as fallback)
+    suggestions_rule = []
     if neg_complaints:
         if neg_complaints.get("wait_time", 0) > 0 or neg_complaints.get("service", 0) > 0:
-            suggestions.append("Reduce wait times and improve service flow: adjust peak staffing and set service time KPIs.")
+            suggestions_rule.append("Reduce wait times and improve service flow: adjust peak staffing and set service time KPIs.")
         if neg_complaints.get("portion_temp", 0) > 0 or neg_complaints.get("food_quality", 0) > 0:
-            suggestions.append("Food quality control: enforce pass checks to avoid cold/forgotten dishes and standardize recipes.")
+            suggestions_rule.append("Food quality control: enforce pass checks to avoid cold/forgotten dishes and standardize recipes.")
         if neg_complaints.get("pricing_value", 0) > 0:
-            suggestions.append("Pricing perception: introduce value bundles and clarify pricing on menus.")
+            suggestions_rule.append("Pricing perception: introduce value bundles and clarify pricing on menus.")
         if neg_complaints.get("ambience", 0) > 0:
-            suggestions.append("Ambience: adjust music volume policy and review climate control standards.")
+            suggestions_rule.append("Ambience: adjust music volume policy and review climate control standards.")
         if neg_complaints.get("cleanliness", 0) > 0:
-            suggestions.append("Cleanliness: increase FOH/BOH cleaning cadence and visible hygiene checks.")
+            suggestions_rule.append("Cleanliness: increase FOH/BOH cleaning cadence and visible hygiene checks.")
         if neg_complaints.get("order_accuracy", 0) > 0:
-            suggestions.append("Order accuracy: implement order confirmation steps and expo verification.")
+            suggestions_rule.append("Order accuracy: implement order confirmation steps and expo verification.")
+
+    # LLM-generated suggestions via Ollama (gemma3:latest)
+    suggestions_llm = []
+    if USE_LLM_SUGGESTIONS:
+        # Build negative reviews sample (use cleaned text for clarity)
+        neg_reviews = [t for t, is_neg in zip(cleaned_texts, neg_mask) if is_neg]
+        if len(neg_reviews) > LLM_MAX_NEG_REVIEW_SAMPLES:
+            neg_reviews = neg_reviews[:LLM_MAX_NEG_REVIEW_SAMPLES]
+        # Convert Counter to plain dict
+        complaint_counts_dict = {k: int(v) for k, v in neg_complaints.items()}
+        print("[LLM] Calling Ollama for business suggestions…")
+        suggestions_llm = generate_suggestions_llm(neg_reviews, complaint_counts_dict)
+        print(f"[LLM] Received {len(suggestions_llm)} suggestions from LLM.")
+
+    # Merge with priority to LLM output; fallback to rules; deduplicate
+    suggestions = suggestions_llm or suggestions_rule
+    seen = set()
+    suggestions = [s for s in suggestions if not (s in seen or seen.add(s))]
+    source = "llm" if suggestions_llm else ("rule" if suggestions_rule else "none")
+    generated_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
     ensure_output_dir()
     with open(os.path.join(OUTPUT_DIR, "business_suggestions.txt"), "w", encoding="utf-8") as f:
         if suggestions:
-            f.write("Key improvement suggestions (data-driven):\n")
+            f.write(f"Key improvement suggestions (source={source})\n")
             for s in suggestions:
                 f.write(f"- {s}\n")
         else:
             f.write("No strong recurring pain points detected in negative topics. Continue monitoring.")
 
     # Export business suggestions to CSV for BigQuery ingestion
-    # Schema: suggestion (STRING)
-    sugg_df = pd.DataFrame({"suggestion": suggestions})
+    # Schema: suggestion (STRING), source (STRING), model (STRING, nullable), generated_at (TIMESTAMP as ISO8601)
+    model_name = "ollama:gemma3:latest" if source == "llm" else None
+    sugg_df = pd.DataFrame({
+        "suggestion": suggestions,
+        "source": [source] * len(suggestions),
+        "model": [model_name] * len(suggestions),
+        "generated_at": [generated_at] * len(suggestions),
+    })
     sugg_df.to_csv(os.path.join(OUTPUT_DIR, "business_suggestions.csv"), index=False)
 
     print(f"Artifacts saved to '{OUTPUT_DIR}/': charts and suggestions.")

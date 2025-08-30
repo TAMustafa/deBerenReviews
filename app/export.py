@@ -17,7 +17,7 @@ def export_enriched_csv(df: pd.DataFrame, cleaned_texts, per_text_complaints):
         enriched[cat] = [1 if cat in cats else 0 for cats in per_text_complaints]
 
     cols = [
-        "source", "rating", "sentiment", "location", "month",
+        "source", "rating", "location", "month",
         "review", "cleaned_review",
     ]
     enriched_out = enriched[cols + categories]

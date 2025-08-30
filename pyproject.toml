@@ -11,4 +11,5 @@ dependencies = [
     "matplotlib>=3.8",
     "seaborn>=0.13",
     "nltk>=3.9",
+    "requests>=2.31",
 ]

@@ -18,14 +18,6 @@ def run_eda(df):
     ax.set_title("Rating distribution")
     plot_and_save(fig, "ratings_distribution.png")
 
-    # Sentiment distribution
-    fig, ax = plt.subplots(figsize=(6, 4))
-    sns.countplot(data=df, x="sentiment", hue="sentiment", order=["negative", "neutral", "positive"], ax=ax, palette=["#d62728", "#ff7f0e", "#2ca02c"]) 
-    if ax.legend_:
-        ax.legend_.remove()
-    ax.set_title("Sentiment distribution")
-    plot_and_save(fig, "sentiment_distribution.png")
-
     # Trend over time (monthly average rating)
     monthly = (
         df.dropna(subset=["timestamp"]).assign(
