@@ -1,0 +1,46 @@
+sentiment,rank,term
+negative,1,stond
+negative,2,zit
+negative,3,koud
+negative,4,jammer
+negative,5,hel
+negative,6,echt
+negative,7,lang
+negative,8,zak
+negative,9,uur
+negative,10,bijna
+negative,11,blijkbar
+negative,12,kreg
+negative,13,gevraagd
+negative,14,moet
+negative,15,gan
+neutral,1,wel
+neutral,2,bedien vriendelijk
+neutral,3,trag
+neutral,4,deal
+neutral,5,bedien
+neutral,6,toetj
+neutral,7,vind
+neutral,8,reken
+neutral,9,gewon
+neutral,10,hamburger
+neutral,11,social
+neutral,12,social deal
+neutral,13,gang
+neutral,14,wij
+neutral,15,lang wacht
+positive,1,lekker
+positive,2,goed
+positive,3,erg
+positive,4,smaakt
+positive,5,mooi
+positive,6,vriendelijk
+positive,7,gang menu
+positive,8,saus
+positive,9,bedankt
+positive,10,zer
+positive,11,geget
+positive,12,sparerib
+positive,13,dag
+positive,14,person
+positive,15,menu
