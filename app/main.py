@@ -109,6 +109,11 @@ def main():
         else:
             f.write("No strong recurring pain points detected in negative topics. Continue monitoring.")
 
+    # Export business suggestions to CSV for BigQuery ingestion
+    # Schema: suggestion (STRING)
+    sugg_df = pd.DataFrame({"suggestion": suggestions})
+    sugg_df.to_csv(os.path.join(OUTPUT_DIR, "business_suggestions.csv"), index=False)
+
     print(f"Artifacts saved to '{OUTPUT_DIR}/': charts and suggestions.")
 
 
