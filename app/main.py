@@ -69,15 +69,6 @@ def main():
             for cls, terms in insights:
                 f.write(f"Class: {cls}\n")
                 f.write(", ".join(terms) + "\n\n")
-        # Also export top terms per sentiment to CSV for BI tools
-        terms_rows = []
-        for cls, terms in insights:
-            for rank, term in enumerate(terms, start=1):
-                terms_rows.append({"sentiment": cls, "rank": rank, "term": term})
-        if terms_rows:
-            pd.DataFrame(terms_rows).to_csv(
-                os.path.join(OUTPUT_DIR, "top_terms_per_sentiment.csv"), index=False
-            )
 
     # Complaint tagging (all reviews + negative-only summary)
     neg_mask = df["sentiment"] == "negative"
@@ -117,10 +108,6 @@ def main():
                 f.write(f"- {s}\n")
         else:
             f.write("No strong recurring pain points detected in negative topics. Continue monitoring.")
-
-    # Also export business suggestions to CSV for BI tools (always create file for stable schema)
-    sugg_df = pd.DataFrame({"suggestion": suggestions})
-    sugg_df.to_csv(os.path.join(OUTPUT_DIR, "business_suggestions.csv"), index=False)
 
     print(f"Artifacts saved to '{OUTPUT_DIR}/': charts and suggestions.")
 

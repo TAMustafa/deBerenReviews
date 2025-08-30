@@ -17,12 +17,6 @@ def run_eda(df):
         ax.legend_.remove()
     ax.set_title("Rating distribution")
     plot_and_save(fig, "ratings_distribution.png")
-    # Export ratings distribution as CSV for BI tools
-    ensure_output_dir()
-    ratings_counts = (
-        df["rating"].value_counts().sort_index().reset_index().rename(columns={"index": "rating", "rating": "count"})
-    )
-    ratings_counts.to_csv(os.path.join(OUTPUT_DIR, "ratings_distribution.csv"), index=False)
 
     # Sentiment distribution
     fig, ax = plt.subplots(figsize=(6, 4))
@@ -31,13 +25,6 @@ def run_eda(df):
         ax.legend_.remove()
     ax.set_title("Sentiment distribution")
     plot_and_save(fig, "sentiment_distribution.png")
-    # Export sentiment distribution as CSV for BI tools
-    sent_order = ["negative", "neutral", "positive"]
-    sent_counts = (
-        df["sentiment"].value_counts().reindex(sent_order).fillna(0).astype(int).reset_index()
-        .rename(columns={"index": "sentiment", "sentiment": "count"})
-    )
-    sent_counts.to_csv(os.path.join(OUTPUT_DIR, "sentiment_distribution.csv"), index=False)
 
     # Trend over time (monthly average rating)
     monthly = (
@@ -52,6 +39,5 @@ def run_eda(df):
         ax.set_title("Average rating over time (monthly)")
         ax.set_ylim(1, 5)
         plot_and_save(fig, "avg_rating_over_time.png")
-        # Export monthly averages as CSV for BI tools
-        monthly.to_csv(os.path.join(OUTPUT_DIR, "avg_rating_over_time.csv"), index=False)
+        # No CSV export; plots only
 
