@@ -1,5 +1,5 @@
-import os
-from typing import Tuple
+from pathlib import Path
+from typing import Tuple, Union
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -7,14 +7,14 @@ from matplotlib import pyplot as plt
 from .config import OUTPUT_DIR
 
 
-def ensure_output_dir(path: str = OUTPUT_DIR) -> None:
-    os.makedirs(path, exist_ok=True)
+def ensure_output_dir(path: Union[str, Path] = OUTPUT_DIR) -> None:
+    Path(path).mkdir(parents=True, exist_ok=True)
 
 
 def plot_and_save(fig, name: str) -> None:
     ensure_output_dir()
-    out = os.path.join(OUTPUT_DIR, name)
-    fig.savefig(out, bbox_inches="tight", dpi=160)
+    out = OUTPUT_DIR / name
+    fig.savefig(str(out), bbox_inches="tight", dpi=160)
     plt.close(fig)
 
 

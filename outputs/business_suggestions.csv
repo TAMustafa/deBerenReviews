@@ -1,8 +1,8 @@
-suggestion,source,model,generated_at
-```json,llm,ollama:gemma3:latest,2025-08-30T18:00:48.718527Z
-"""Investigate and address frequent complaints regarding wait times, focusing on staffing levels during peak hours."",",llm,ollama:gemma3:latest,2025-08-30T18:00:48.718527Z
-"""Improve service quality through additional staff training, emphasizing attentiveness and proactive guest interaction."",",llm,ollama:gemma3:latest,2025-08-30T18:00:48.718527Z
-"""Implement stricter quality control measures for food preparation, particularly concerning temperature, freshness, and ingredient quality."",",llm,ollama:gemma3:latest,2025-08-30T18:00:48.718527Z
-"""Evaluate and optimize the ambiance, considering noise levels, temperature, and overall cleanliness to create a more comfortable dining experience."",",llm,ollama:gemma3:latest,2025-08-30T18:00:48.718527Z
-"""Review portion temperature protocols to ensure consistent delivery of hot food, addressing multiple reports of cold dishes."",",llm,ollama:gemma3:latest,2025-08-30T18:00:48.718527Z
-"""Conduct a value perception analysis to assess pricing relative to portion size and quality, potentially adjusting menu offerings or pricing strategies."",",llm,ollama:gemma3:latest,2025-08-30T18:00:48.718527Z
+suggestie,bron,model,gegenereerd_op
+```json,llm,ollama:gemma3:latest,2025-08-31T08:05:52.202436Z
+"""Verhoog de frequentie van kwaliteitscontroles, vooral met betrekking tot temperatuur en versheid van voedsel, gezien herhaalde klachten over koude gerechten en bederf."",",llm,ollama:gemma3:latest,2025-08-31T08:05:52.202436Z
+"""Verbeter de service door het trainen van het personeel in efficiënte bedieningstechnieken en verbeterde communicatie met klanten, gebaseerd op feedback over lange wachttijden en onvriendelijke interacties."",",llm,ollama:gemma3:latest,2025-08-31T08:05:52.202436Z
+"""Optimaliseer de processen rondom orderafhandeling om de nauwkeurigheid van bestellingen te garanderen, gezien de hoge aantallen klachten over verkeerde bestellingen."",",llm,ollama:gemma3:latest,2025-08-31T08:05:52.202436Z
+"""Investeer in betere afkoeling van het restaurant, gezien de herhaalde klachten over onvoldoende airconditioning en oncomfortabele omstandigheden."",",llm,ollama:gemma3:latest,2025-08-31T08:05:52.202436Z
+"""Onderzoek de prijsstelling in relatie tot de kwaliteit en portiegroottes, aangezien er klachten zijn over overprijsing en een slechte prijs-kwaliteitverhouding."",",llm,ollama:gemma3:latest,2025-08-31T08:05:52.202436Z
+"""Verbeter de hygiëne en schoonmaak, met name in de keuken en toiletten, gezien de meldingen over ontsmettingsproblemen en ongedierte."",",llm,ollama:gemma3:latest,2025-08-31T08:05:52.202436Z

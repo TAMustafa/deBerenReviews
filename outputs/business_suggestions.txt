@@ -1,8 +1,8 @@
-Key improvement suggestions (source=llm)
+Belangrijkste verbetersuggesties (bron=llm)
 - ```json
-- "Investigate and address frequent complaints regarding wait times, focusing on staffing levels during peak hours.",
-- "Improve service quality through additional staff training, emphasizing attentiveness and proactive guest interaction.",
-- "Implement stricter quality control measures for food preparation, particularly concerning temperature, freshness, and ingredient quality.",
-- "Evaluate and optimize the ambiance, considering noise levels, temperature, and overall cleanliness to create a more comfortable dining experience.",
-- "Review portion temperature protocols to ensure consistent delivery of hot food, addressing multiple reports of cold dishes.",
-- "Conduct a value perception analysis to assess pricing relative to portion size and quality, potentially adjusting menu offerings or pricing strategies.",
+- "Verhoog de frequentie van kwaliteitscontroles, vooral met betrekking tot temperatuur en versheid van voedsel, gezien herhaalde klachten over koude gerechten en bederf.",
+- "Verbeter de service door het trainen van het personeel in efficiënte bedieningstechnieken en verbeterde communicatie met klanten, gebaseerd op feedback over lange wachttijden en onvriendelijke interacties.",
+- "Optimaliseer de processen rondom orderafhandeling om de nauwkeurigheid van bestellingen te garanderen, gezien de hoge aantallen klachten over verkeerde bestellingen.",
+- "Investeer in betere afkoeling van het restaurant, gezien de herhaalde klachten over onvoldoende airconditioning en oncomfortabele omstandigheden.",
+- "Onderzoek de prijsstelling in relatie tot de kwaliteit en portiegroottes, aangezien er klachten zijn over overprijsing en een slechte prijs-kwaliteitverhouding.",
+- "Verbeter de hygiëne en schoonmaak, met name in de keuken en toiletten, gezien de meldingen over ontsmettingsproblemen en ongedierte.",

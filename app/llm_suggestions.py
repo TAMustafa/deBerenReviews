@@ -6,21 +6,21 @@ from .config import OLLAMA_BASE_URL, OLLAMA_MODEL
 
 
 SYSTEM_INSTRUCTIONS = (
-    "You are an operations analyst for a restaurnat chain. Read complaint category counts and a sample of recent negative reviews. "
-    "Synthesize 3-7 concise, actionable business suggestions. Each suggestion should be specific, feasible, and oriented to operational improvements (staffing, process, QC, training, menu, pricing, ambience). "
-    "Avoid generic advice. Use evidence from the data. Return suggestions as a JSON list of strings only."
+    "Je bent een operationeel analist voor een restaurantketen. Lees de aantallen per klachtcategorie en een steekproef van recente negatieve reviews. "
+    "Formuleer 3-7 beknopte, uitvoerbare verbetersuggesties voor het bedrijf. Iedere suggestie is specifiek, haalbaar en gericht op operationele verbeteringen (bezetting, processen, kwaliteitscontrole, training, menu, prijsstelling, ambiance). "
+    "Vermijd algemene adviezen. Gebruik bewijs uit de data. Geef het antwoord ALLEEN terug als een JSON-lijst met Nederlandstalige strings."
 )
 
 
 def _build_prompt(complaint_counts: Dict[str, int], negative_reviews: List[str], top_terms_per_sentiment: List[List[str]] | None) -> str:
     parts = [
-        "Complaint category counts:",
+        "Aantallen per klachtcategorie:",
     ]
     for k, v in sorted(complaint_counts.items(), key=lambda x: (-x[1], x[0])):
         parts.append(f"- {k}: {v}")
     parts.append("")
     if top_terms_per_sentiment:
-        parts.append("Top terms per sentiment (model-derived):")
+        parts.append("Belangrijkste termen per sentiment (model-afgeleid):")
         for item in top_terms_per_sentiment:
             # item expected as (sentiment, [terms])
             try:
@@ -31,7 +31,7 @@ def _build_prompt(complaint_counts: Dict[str, int], negative_reviews: List[str],
             terms = list(terms)[:15]
             parts.append(f"- {sentiment}: {', '.join(terms)}")
         parts.append("")
-    parts.append("Sample negative reviews (truncated):")
+    parts.append("Voorbeeld negatieve reviews (ingekort):")
     for i, r in enumerate(negative_reviews[:50], start=1):
         # Keep each review modest length
         snippet = r.strip()
@@ -40,7 +40,7 @@ def _build_prompt(complaint_counts: Dict[str, int], negative_reviews: List[str],
         parts.append(f"{i}. {snippet}")
     parts.append("")
     parts.append(
-        "Generate concise, high-quality suggestions. Respond ONLY with a JSON array of strings (no extra text)."
+        "Genereer beknopte, kwalitatieve suggesties. Antwoord ALLEEN met een JSON-array van Nederlandstalige strings (geen extra tekst)."
     )
     return "\n".join(parts)
 

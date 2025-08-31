@@ -12,4 +12,41 @@ dependencies = [
     "seaborn>=0.13",
     "nltk>=3.9",
     "requests>=2.31",
+    "openpyxl>=3.1.5",
+    "transformers>=4.43.0",
+    "huggingface-hub>=0.23.0",
+    "torch>=2.3.0",
 ]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.5.0",
+    "black>=24.4.0",
+    "mypy>=1.10.0",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-select = [
+  "E",  # pycodestyle errors
+  "F",  # pyflakes
+  "I",  # isort
+]
+ignore = [
+  "E501",  # line length handled by black
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_return_any = true
+warn_unused_configs = true
